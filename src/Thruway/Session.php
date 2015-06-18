@@ -5,6 +5,7 @@ namespace Thruway;
 
 use Thruway\Authentication\AuthenticationDetails;
 use Thruway\Common\Utils;
+use Thruway\Logging\Logger;
 use Thruway\Manager\ManagerDummy;
 use Thruway\Manager\ManagerInterface;
 use Thruway\Message\HelloMessage;
@@ -89,6 +90,7 @@ class Session extends AbstractSession
     public function sendMessage(Message $msg)
     {
         $this->messagesSent++;
+        Logger::debug($this, "(" . $this->getSessionId() . ") To   Client: " . json_encode($msg));
         $this->transport->sendMessage($msg);
     }
 
@@ -98,6 +100,7 @@ class Session extends AbstractSession
      */
     public function onClose()
     {
+        Logger::debug($this, "(" . $this->getSessionId() . ") onClose: realm is " . ($this->realm ? $this->realm->getRealmName() : null));
         if ($this->realm !== null) {
             // only send the leave metaevent if we actually made it into the realm
             if ($this->isAuthenticated()) {

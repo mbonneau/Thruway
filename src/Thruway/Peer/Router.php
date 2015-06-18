@@ -93,7 +93,7 @@ class Router extends AbstractPeer implements RouterInterface
         $session->setLoop($this->getLoop());
 
         // TODO: add a little more detail to this (what kind and address maybe?)
-        Logger::info($this, "New Session started " . json_encode($transport->getTransportDetails()) . "");
+        Logger::info($this, "(" . $session->getSessionId() . ") New Session started " . json_encode($transport->getTransportDetails()) . "");
 
         $this->sessions->attach($transport, $session);
 
@@ -110,6 +110,8 @@ class Router extends AbstractPeer implements RouterInterface
     {
         /* @var $session \Thruway\Session */
         $session = $this->sessions[$transport];
+
+        Logger::debug($this, "(" . $session->getSessionId() . ") From Client: " . get_class($transport) . ": " . json_encode($msg));
 
         // see if the session is in a realm
         if ($session->getRealm() === null) {

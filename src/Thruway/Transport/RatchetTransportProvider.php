@@ -166,7 +166,7 @@ class RatchetTransportProvider extends AbstractTransportProvider implements Mess
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        Logger::debug($this, "onMessage: ({$msg})");
+        //Logger::debug($this, "onMessage: ({$msg})");
         /** @var TransportInterface $transport */
         $transport = $this->transports[$from];
 
