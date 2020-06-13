@@ -1,6 +1,6 @@
 <?php
 
-namespace Thruway\Transport;
+namespace Thruway\Router\Transport;
 
 use React\EventLoop\LoopInterface;
 use Thruway\Message\Message;
@@ -10,7 +10,7 @@ use Thruway\Message\Message;
  *
  * @package Thruway\Transport
  */
-class InternalClientTransport extends AbstractTransport
+class InternalClientTransport extends \Thruway\Transport\AbstractTransport
 {
     /**
      * Constructor

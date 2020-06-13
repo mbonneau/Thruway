@@ -1,6 +1,6 @@
 <?php
 
-namespace Thruway\Transport;
+namespace Thruway\Router\Transport;
 
 use Thruway\Message\Message;
 use Thruway\Serializer\JsonSerializer;
@@ -10,7 +10,7 @@ use Thruway\Serializer\JsonSerializer;
  *
  * @package Thruway\Transport
  */
-class DummyTransport extends AbstractTransport
+class DummyTransport extends \Thruway\Transport\AbstractTransport
 {
     /**
      * lastMessageSent holds the last message that was sent on the transport

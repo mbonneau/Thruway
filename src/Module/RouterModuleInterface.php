@@ -4,7 +4,7 @@ namespace Thruway\Module;
 
 use React\EventLoop\LoopInterface;
 use Thruway\Event\EventSubscriberInterface;
-use Thruway\Peer\RouterInterface;
+use Thruway\Router\Router;
 
 /**
  * Interface RouterModuleInterface
@@ -15,10 +15,10 @@ interface RouterModuleInterface extends EventSubscriberInterface
     /**
      * Called by the router when it is added
      *
-     * @param RouterInterface $router
+     * @param Router $router
      * @param LoopInterface $loop
      */
-    public function initModule(RouterInterface $router, LoopInterface $loop);
+    public function initModule(Router $router, LoopInterface $loop);
 
     /**
      * @return LoopInterface

@@ -6,7 +6,7 @@ class Issue100Test extends \Thruway\Tests\TestCase {
     public function testUnsubscribeSendingUnsubThenError() {
         $broker = new \Thruway\Role\Broker();
 
-        $transport = new \Thruway\Transport\DummyTransport();
+        $transport = new \Thruway\Router\Transport\DummyTransport();
         $session = new \Thruway\Session($transport);
 
         $subscribeMsg = new \Thruway\Message\SubscribeMessage(123, new \stdClass(), 'issue100');

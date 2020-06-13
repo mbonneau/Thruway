@@ -1,9 +1,10 @@
 <?php
 
-namespace Thruway\Transport;
+namespace Thruway\Router\Transport;
 
 use React\EventLoop\LoopInterface;
 use Thruway\Peer\ClientInterface;
+use Thruway\Transport\AbstractClientTransportProvider;
 
 /**
  * class DummyTransportProvider

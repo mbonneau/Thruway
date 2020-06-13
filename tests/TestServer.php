@@ -2,13 +2,12 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-use Thruway\Peer\Router;
-use Thruway\Transport\RatchetTransportProvider;
+use Thruway\Router\Transport\RatchetTransportProvider;
 
 //Logger::set(new \Psr\Log\NullLogger());
 
 $timeout = isset($argv[1]) ? $argv[1] : 0;
-$router  = new Router();
+$router  = new \Thruway\Router\Router();
 $loop    = $router->getLoop();
 
 //Create a WebSocket connection that listens on localhost port 8090
@@ -32,7 +31,7 @@ $router->registerModules([
     // Websocket listener
     new RatchetTransportProvider("127.0.0.1", 8090),
     // Rawsocket listener
-    new \Thruway\Transport\RawSocketTransportProvider('127.0.0.1', 28181)
+    new \Thruway\Router\Transport\RawSocketTransportProvider('127.0.0.1', 28181)
 
 ]);
 

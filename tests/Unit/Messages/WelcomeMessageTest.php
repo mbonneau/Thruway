@@ -9,7 +9,7 @@ class WelcomeMessageTest extends \Thruway\Tests\TestCase
     {
 
         $brokerFeatures = null;
-        $session        = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+        $session        = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         $broker         = new \Thruway\Role\Broker();
 
         $session->dispatcher->addRealmSubscriber($broker);
@@ -36,7 +36,7 @@ class WelcomeMessageTest extends \Thruway\Tests\TestCase
 
         $dealerFeatures = null;
 
-        $session = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+        $session = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         $dealer  = new \Thruway\Role\Dealer();
 
         $session->dispatcher->addRealmSubscriber($dealer);

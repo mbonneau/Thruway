@@ -11,7 +11,7 @@ use Thruway\Transport\TransportInterface;
  * Interface RouterInterface
  * @package Thruway\Peer
  */
-interface RouterInterface extends PeerInterface
+interface RouterInterface
 {
     /**
      * Handle process message

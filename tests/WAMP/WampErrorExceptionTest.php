@@ -6,7 +6,7 @@ class WampErrorExceptionTest extends \Thruway\Tests\TestCase {
     function testWampErrorException() {
         $loop = \React\EventLoop\Factory::create();
 
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
 
         //$router->addTransportProvider(new \Thruway\Transport\RawSocketTransportProvider());
 

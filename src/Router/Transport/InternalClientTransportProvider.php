@@ -1,6 +1,6 @@
 <?php
 
-namespace Thruway\Transport;
+namespace Thruway\Router\Transport;
 
 use Thruway\Event\ConnectionOpenEvent;
 use Thruway\Event\RouterStartEvent;

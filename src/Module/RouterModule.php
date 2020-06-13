@@ -3,7 +3,7 @@
 namespace Thruway\Module;
 
 use React\EventLoop\LoopInterface;
-use Thruway\Peer\RouterInterface;
+use Thruway\Router\Router;
 
 /**
  * Class RouterModule
@@ -12,7 +12,7 @@ use Thruway\Peer\RouterInterface;
 class RouterModule implements RouterModuleInterface
 {
     /**
-     * @var RouterInterface
+     * @var Router
      */
     protected $router;
 
@@ -22,10 +22,10 @@ class RouterModule implements RouterModuleInterface
     protected $loop;
 
     /**
-     * @param RouterInterface $router
+     * @param Router $router
      * @param LoopInterface $loop
      */
-    public function initModule(RouterInterface $router, LoopInterface $loop)
+    public function initModule(Router $router, LoopInterface $loop)
     {
         $this->router = $router;
         $this->loop   = $loop;

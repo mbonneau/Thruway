@@ -32,7 +32,7 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
         $this->_challenged = false;
 
         $loop   = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
 
         $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
@@ -88,7 +88,7 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Transport\RatchetTransportProvider('127.0.0.1', 58089));
+        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58089));
 
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:58089/'));
 

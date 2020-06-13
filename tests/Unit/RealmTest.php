@@ -6,6 +6,11 @@ class RealmTest extends \Thruway\Tests\TestCase
 {
     private $_sessions;
 
+    protected function setUp(): void
+    {
+        \Thruway\Logging\Logger::set(new \Psr\Log\NullLogger());
+    }
+
     /**
      * @doesNotPerformAssertions
      *
@@ -35,7 +40,7 @@ class RealmTest extends \Thruway\Tests\TestCase
      */
     public function testJoin(\Thruway\Realm $realm)
     {
-        $session = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+        $session = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
 
         $realm->addSession($session);
         $this->assertSame($session->getRealm(), $realm);

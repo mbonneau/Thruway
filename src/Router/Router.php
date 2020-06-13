@@ -1,6 +1,6 @@
 <?php
 
-namespace Thruway\Peer;
+namespace Thruway\Router;
 
 use Thruway\Common\Utils;
 use Thruway\Event\ConnectionCloseEvent;
@@ -13,20 +13,20 @@ use Thruway\Event\RouterStopEvent;
 use Thruway\Logging\Logger;
 use Thruway\Message\Message;
 use Thruway\Module\RouterModuleInterface;
+use Thruway\Peer\ClientInterface;
 use Thruway\RealmManager;
 use Thruway\Session;
-use Thruway\Transport\InternalClientTransportProvider;
-use Thruway\Transport\RouterTransportProviderInterface;
-use Thruway\Transport\TransportInterface;
+use Thruway\Router\Transport\InternalClientTransportProvider;
+use Thruway\Router\Transport\RouterTransportProviderInterface;
+use Thruway\Router\Transport\TransportInterface;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
 
 /**
  * Class Router
  *
- * @package Thruway\Peer
  */
-class Router implements RouterInterface, EventSubscriberInterface
+class Router implements EventSubscriberInterface
 {
     /** @var bool */
     protected $started = false;
@@ -101,7 +101,7 @@ class Router implements RouterInterface, EventSubscriberInterface
     /**
      * @inheritdoc
      */
-    public function createNewSession(TransportInterface $transport)
+    public function createNewSession($transport)
     {
         $session = new Session($transport);
         $session->setLoop($this->getLoop());

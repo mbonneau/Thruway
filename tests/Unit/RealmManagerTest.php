@@ -3,6 +3,10 @@
 namespace Thruway\Tests\Unit;
 
 class RealmManagerTest extends \Thruway\Tests\TestCase {
+    protected function setUp(): void
+    {
+        \Thruway\Logging\Logger::set(new \Psr\Log\NullLogger());
+    }
 
     public function testRealmNotFound() {
         $this->expectException('\Thruway\Exception\RealmNotFoundException');
@@ -20,7 +24,7 @@ class RealmManagerTest extends \Thruway\Tests\TestCase {
     public function testAddRealmWithSameNameAsExisting() {
         $this->expectException('\Exception');
         $realmManager = new \Thruway\RealmManager();
-        $realmManager->initModule(new \Thruway\Peer\Router(), \React\EventLoop\Factory::create());
+        $realmManager->initModule(new \Thruway\Router\Router(), \React\EventLoop\Factory::create());
 
         $realm1 = new \Thruway\Realm("test_realm");
         $realm2 = new \Thruway\Realm("test_realm");

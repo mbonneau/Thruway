@@ -53,9 +53,8 @@ class Session extends AbstractSession implements RealmModuleInterface
     /**
      * Constructor
      *
-     * @param \Thruway\Transport\TransportInterface $transport
      */
-    public function __construct(TransportInterface $transport)
+    public function __construct($transport)
     {
         $this->transport             = $transport;
         $this->state                 = static::STATE_PRE_HELLO;

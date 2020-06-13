@@ -16,7 +16,7 @@ use Thruway\Message\WelcomeMessage;
 use Thruway\Module\RealmModuleInterface;
 use Thruway\Role\Broker;
 use Thruway\Role\Dealer;
-use Thruway\Transport\DummyTransport;
+use Thruway\Router\Transport\DummyTransport;
 
 /**
  * Class Realm

@@ -18,7 +18,7 @@ use Thruway\Message\UnregisterMessage;
 use Thruway\Realm;
 use Thruway\Role\Dealer;
 use Thruway\Session;
-use Thruway\Transport\DummyTransport;
+use Thruway\Router\Transport\DummyTransport;
 
 class DealerTest extends \Thruway\Tests\TestCase {
     /** @var \Thruway\Message\HelloMessage */
@@ -364,10 +364,10 @@ class DealerTest extends \Thruway\Tests\TestCase {
     public function testInvocationError() {
         $dealer = new \Thruway\Role\Dealer();
 
-        $callerTransport = new \Thruway\Transport\DummyTransport();
+        $callerTransport = new \Thruway\Router\Transport\DummyTransport();
         $callerSession = new Session($callerTransport);
 
-        $calleeTransport = new \Thruway\Transport\DummyTransport();
+        $calleeTransport = new \Thruway\Router\Transport\DummyTransport();
         $calleeSession = new Session($calleeTransport);
 
         // register from callee
@@ -608,10 +608,10 @@ class DealerTest extends \Thruway\Tests\TestCase {
     {
         $dealer = new \Thruway\Role\Dealer();
 
-        $callerTransport = new \Thruway\Transport\DummyTransport();
+        $callerTransport = new \Thruway\Router\Transport\DummyTransport();
         $callerSession   = new Session($callerTransport);
 
-        $calleeTransport = new \Thruway\Transport\DummyTransport();
+        $calleeTransport = new \Thruway\Router\Transport\DummyTransport();
         $calleeSession   = new Session($calleeTransport);
 
         // register from callee

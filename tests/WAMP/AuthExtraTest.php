@@ -44,7 +44,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
         $this->_challenged = false;
 
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
 
         $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
@@ -100,7 +100,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Transport\RatchetTransportProvider('127.0.0.1', 58088));
+        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58088));
 
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:58088/'));
 
@@ -139,7 +139,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
         $this->_challenged = false;
 
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
 
         $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
@@ -201,7 +201,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Transport\RatchetTransportProvider('127.0.0.1', 8087));
+        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 8087));
 
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:8087/'));
 

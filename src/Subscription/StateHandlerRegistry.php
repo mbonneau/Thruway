@@ -6,9 +6,9 @@ use React\EventLoop\LoopInterface;
 use Thruway\Logging\Logger;
 use Thruway\Message\SubscribeMessage;
 use Thruway\Module\RouterModuleClient;
-use Thruway\Peer\RouterInterface;
 use Thruway\Realm;
 use Thruway\Role\Broker;
+use Thruway\Router\Router;
 
 /**
  * Class StateHandlerRegistry
@@ -59,7 +59,7 @@ class StateHandlerRegistry extends RouterModuleClient
      *
      * @inheritdoc
      */
-    public function initModule(RouterInterface $router, LoopInterface $loop)
+    public function initModule(Router $router, LoopInterface $loop)
     {
         parent::initModule($router, $loop);
 

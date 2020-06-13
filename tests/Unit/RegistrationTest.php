@@ -19,14 +19,14 @@ class RegistrationTest extends \Thruway\Tests\TestCase
 
     public function setUp(): void
     {
-        $this->_calleeSession = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
-        $this->_callerSession = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+        $this->_calleeSession = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
+        $this->_callerSession = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         $this->_registration  = new \Thruway\Registration($this->_calleeSession, 'test_procedure');
     }
 
     public function testMakingCallIncrementsCallCount()
     {
-        $mockSession = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+        $mockSession = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
 
         $this->assertEquals(0, $this->_registration->getCurrentCallCount());
 

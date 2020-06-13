@@ -13,8 +13,8 @@ use Thruway\Message\Message;
 use Thruway\Message\WelcomeMessage;
 use Thruway\Module\RealmModuleInterface;
 use Thruway\Module\RouterModuleClient;
-use Thruway\Peer\RouterInterface;
 use Thruway\Realm;
+use Thruway\Router\Router;
 use Thruway\Session;
 
 /**
@@ -100,7 +100,7 @@ class AuthenticationManager extends RouterModuleClient implements RealmModuleInt
      *
      * @inheritdoc
      */
-    public function initModule(RouterInterface $router, LoopInterface $loop)
+    public function initModule(Router $router, LoopInterface $loop)
     {
         parent::initModule($router, $loop);
     }

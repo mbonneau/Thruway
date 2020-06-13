@@ -4,6 +4,11 @@ namespace Thruway\Tests\Unit\Role;
 
 class BrokerTest extends \Thruway\Tests\TestCase
 {
+    protected function setUp(): void
+    {
+        \Thruway\Logging\Logger::set(new \Psr\Log\NullLogger());
+    }
+
     public function testUnsubscribeFromNonExistentSubscription()
     {
         $transport = $this->getMockBuilder('\Thruway\Transport\TransportInterface')

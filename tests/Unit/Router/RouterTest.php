@@ -1,8 +1,10 @@
 <?php
 
-namespace Thruway\Tests\Unit\Peer;
+namespace Thruway\Tests\Unit\Router;
 
 use Thruway\Message\WelcomeMessage;
+use Thruway\Router\Router;
+use Thruway\Router\Transport\DummyTransport;
 
 /**
  * Class RouterTest
@@ -11,7 +13,7 @@ class RouterTest extends \Thruway\Tests\TestCase
 {
 
     /**
-     * @var \Thruway\Peer\Router
+     * @var \Thruway\Router\Router
      */
     private $router;
 
@@ -19,7 +21,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     {
         \Thruway\Logging\Logger::set(new \Psr\Log\NullLogger());
 
-        $this->router = new \Thruway\Peer\Router();
+        $this->router = new Router();
     }
 
     public function testLoopCreated()
@@ -31,8 +33,8 @@ class RouterTest extends \Thruway\Tests\TestCase
      * Test router start
      * @doesNotPerformAssertions
      *
-     * @return \Thruway\Peer\Router
-     * @throws Exception
+     * @return \Thruway\Router\Router
+     * @throws \Exception
      */
     public function testStart()
     {
@@ -45,10 +47,10 @@ class RouterTest extends \Thruway\Tests\TestCase
      * Test ConnectionOpen
      *
      * @depends testStart
-     * @param \Thruway\Peer\Router $router
+     * @param \Thruway\Router\Router $router
      * @return array
      */
-    public function testConnectionOpen(\Thruway\Peer\Router $router)
+    public function testConnectionOpen(\Thruway\Router\Router $router)
     {
         $transport = $this->createMock('Thruway\Transport\TransportInterface');
 
@@ -71,7 +73,7 @@ class RouterTest extends \Thruway\Tests\TestCase
      *
      */
     private function getNewRouterAndSession() {
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
         $router->start(false);
         $transport = $this->createMock('Thruway\Transport\TransportInterface');
 
@@ -249,7 +251,7 @@ class RouterTest extends \Thruway\Tests\TestCase
         $msg = new \Thruway\Message\SubscribeMessage('333333', [], 'test.topic');
         $session->dispatchMessage($msg);
 
-        /* @var $router \Thruway\Peer\Router */
+        /* @var $router \Thruway\Router\Router */
         $router        = $rt['router'];
         $subscriptions = $router->getRealmManager()->getRealm('test.realm')->getBroker()->managerGetSubscriptions()[0];
 
@@ -405,12 +407,12 @@ class RouterTest extends \Thruway\Tests\TestCase
 //     * Publish a message from a different session to the method above
 //     *
 //     * @depends testStart
-//     * @param \Thruway\Peer\Router $router
+//     * @param \Thruway\Router\Router $router
 //     * @return array
 //     *
 //     * https://github.com/tavendo/WAMP/blob/master/spec/basic.md#publish-1
 //     */
-//    public function testPublishMessage(\Thruway\Peer\Router $router)
+//    public function testPublishMessage(\Thruway\Router\Router $router)
 //    {
         $router = $this->getActiveRouterAndSession()['router'];
         $transport = $this->createMock('Thruway\Transport\TransportInterface');
@@ -519,12 +521,12 @@ class RouterTest extends \Thruway\Tests\TestCase
      * Abort Message
      *
      * @depends testStart
-     * @param \Thruway\Peer\Router $router
+     * @param \Thruway\Router\Router $router
      * @return array
      *
      * @see https://github.com/tavendo/WAMP/blob/master/spec/basic.md#abort
      */
-    public function testAbortMessage(\Thruway\Peer\Router $router)
+    public function testAbortMessage(\Thruway\Router\Router $router)
     {
 
         $transport = $this->createMock('Thruway\Transport\TransportInterface');
@@ -553,10 +555,10 @@ class RouterTest extends \Thruway\Tests\TestCase
      * Unhandled Message
      *
      * @depends testStart
-     * @param \Thruway\Peer\Router $router
+     * @param \Thruway\Router\Router $router
      * @return array
      */
-    public function xtestUnhandledMessage(\Thruway\Peer\Router $router)
+    public function xtestUnhandledMessage(\Thruway\Router\Router $router)
     {
         $this->markTestSkipped();
 
@@ -597,10 +599,10 @@ class RouterTest extends \Thruway\Tests\TestCase
      * Invalid Empty Realm Name
      *
      * @depends testStart
-     * @param \Thruway\Peer\Router $router
+     * @param \Thruway\Router\Router $router
      * @return array
      */
-    public function testInvalidRealm(\Thruway\Peer\Router $router)
+    public function testInvalidRealm(\Thruway\Router\Router $router)
     {
 
         $transport = $this->createMock('Thruway\Transport\TransportInterface');
@@ -638,9 +640,9 @@ class RouterTest extends \Thruway\Tests\TestCase
      * prevents other internal clients from receiving the published event
      *
      * @depends testStart
-     * @param \Thruway\Peer\Router $router
+     * @param \Thruway\Router\Router $router
      */
-    public function testIssue53(\Thruway\Peer\Router $router) {
+    public function testIssue53(\Thruway\Router\Router $router) {
         $this->_callCount = 0;
 
         $transport1 = $this->getMockBuilder('\Thruway\Transport\TransportInterface')
@@ -718,7 +720,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
 
     public function testStateHandlerStuff() {
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
 
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
@@ -823,7 +825,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
 
     public function testStateRestoreWithQueuePubIdNotInQueue() {
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
 
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
@@ -929,7 +931,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
 
     public function testStateRestoreWithQueueNullPubId() {
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
 
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
@@ -1035,7 +1037,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
 
     public function testStateRestoreWithNoQueue() {
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
 
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
@@ -1133,8 +1135,8 @@ class RouterTest extends \Thruway\Tests\TestCase
 
     public function testRouterStop() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
-        $router->addTransportProvider(new \Thruway\Transport\RatchetTransportProvider("127.0.0.1", 18080));
+        $router = new \Thruway\Router\Router($loop);
+        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider("127.0.0.1", 18080));
         $loop->addTimer(.1, function () use ($router) {
             $router->stop();
             $this->_result = "Stop was called";
@@ -1146,8 +1148,8 @@ class RouterTest extends \Thruway\Tests\TestCase
 
     public function testRouterStopWithLiveSession() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
-        $router->addTransportProvider(new \Thruway\Transport\RatchetTransportProvider("127.0.0.1", 18080));
+        $router = new \Thruway\Router\Router($loop);
+        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider("127.0.0.1", 18080));
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->on('open', function () use ($loop, $router) {
             $router->stop();
@@ -1164,8 +1166,8 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
     public function testRouterStopWithRawSocketLiveSession() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
-        $router->addTransportProvider(new \Thruway\Transport\RawSocketTransportProvider("127.0.0.1", 18080));
+        $router = new \Thruway\Router\Router($loop);
+        $router->addTransportProvider(new \Thruway\Router\Transport\RawSocketTransportProvider("127.0.0.1", 18080));
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->on('open', function () use ($loop, $router) {
             $router->stop();
@@ -1182,9 +1184,9 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
     public function testRouterStopWithInternalClientLiveSession() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
         // just so we have another transport
-        $router->addTransportProvider(new \Thruway\Transport\RawSocketTransportProvider("127.0.0.1", 18080));
+        $router->addTransportProvider(new \Thruway\Router\Transport\RawSocketTransportProvider("127.0.0.1", 18080));
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->on('open', function () use ($loop, $router) {
             $router->stop();
@@ -1202,12 +1204,12 @@ class RouterTest extends \Thruway\Tests\TestCase
 
     public function testRealmJoinNoAutocreate() {
         $loop = new \React\EventLoop\StreamSelectLoop();
-        $router = new \Thruway\Peer\Router($loop);
+        $router = new \Thruway\Router\Router($loop);
 
         // you have to have at least one transport for the router to start
         // internal client in this case
         $iClient = new \Thruway\Peer\Client('some_realm');
-        $router->registerModule(new \Thruway\Transport\InternalClientTransportProvider($iClient));
+        $router->registerModule(new \Thruway\Router\Transport\InternalClientTransportProvider($iClient));
 
         $router->start(false);
 
@@ -1215,7 +1217,7 @@ class RouterTest extends \Thruway\Tests\TestCase
 
         $this->assertEquals(1,count($router->getRealmManager()->getRealms()));
 
-        $transport = new \Thruway\Transport\DummyTransport();
+        $transport = new DummyTransport();
         $session = $router->createNewSession($transport);
         $prevMsg = null;
         $router->getEventDispatcher()->dispatch("connection_open", new \Thruway\Event\ConnectionOpenEvent($session));
@@ -1254,7 +1256,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     public function testGetRealmWithNonscalarThrows()
     {
         $this->expectException('\Throwable');
-        $router = new \Thruway\Peer\Router();
+        $router = new \Thruway\Router\Router();
 
         $router->getRealmManager()->getRealm(new stdClass());
     }
@@ -1264,7 +1266,7 @@ class RouterTest extends \Thruway\Tests\TestCase
 //    public function testRemoveInternalClient() {
 //        $clientRemovalDeferred = new \React\Promise\Deferred();
 //        $loop = \React\EventLoop\Factory::create();
-//        $router = new \Thruway\Peer\Router($loop);
+//        $router = new \Thruway\Router\Router($loop);
 //        $client = new \Thruway\Peer\Client("some_realm", $loop);
 //        $client->on('open', function (\Thruway\ClientSession $session, $transport, $details) use ($client, $loop, $router) {
 //            $session->register('internal_echo', function ($args) {

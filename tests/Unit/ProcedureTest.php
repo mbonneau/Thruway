@@ -546,13 +546,13 @@ class ProcedureTest extends \Thruway\Tests\TestCase
 
     public function testInvokeFirstRegistration()
     {
-        $transportCaller = new \Thruway\Transport\DummyTransport();
+        $transportCaller = new \Thruway\Router\Transport\DummyTransport();
         $sessionCaller = new \Thruway\Session($transportCaller);
 
-        $transportA = new \Thruway\Transport\DummyTransport();
+        $transportA = new \Thruway\Router\Transport\DummyTransport();
         $sessionA = new \Thruway\Session($transportA);
 
-        $transportB = new \Thruway\Transport\DummyTransport();
+        $transportB = new \Thruway\Router\Transport\DummyTransport();
         $sessionB = new \Thruway\Session($transportB);
 
         $proc = new \Thruway\Procedure('first.procedure');
@@ -585,13 +585,13 @@ class ProcedureTest extends \Thruway\Tests\TestCase
 
     public function testInvokeLastRegistration()
     {
-        $transportCaller = new \Thruway\Transport\DummyTransport();
+        $transportCaller = new \Thruway\Router\Transport\DummyTransport();
         $sessionCaller = new \Thruway\Session($transportCaller);
 
-        $transportA = new \Thruway\Transport\DummyTransport();
+        $transportA = new \Thruway\Router\Transport\DummyTransport();
         $sessionA = new \Thruway\Session($transportA);
 
-        $transportB = new \Thruway\Transport\DummyTransport();
+        $transportB = new \Thruway\Router\Transport\DummyTransport();
         $sessionB = new \Thruway\Session($transportB);
 
         $proc = new \Thruway\Procedure('some.procedure');
@@ -625,7 +625,7 @@ class ProcedureTest extends \Thruway\Tests\TestCase
 
     public function testInvokeRoundRobinRegistration()
     {
-        $transportCaller = new \Thruway\Transport\DummyTransport();
+        $transportCaller = new \Thruway\Router\Transport\DummyTransport();
         $sessionCaller = new \Thruway\Session($transportCaller);
 
         $sessionsToStart = 3;
@@ -633,7 +633,7 @@ class ProcedureTest extends \Thruway\Tests\TestCase
         $sessions = array();
 
         for ($i = $sessionsToStart; $i-- > 0;) {
-            $sessions[] = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+            $sessions[] = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         }
 
         $proc = new \Thruway\Procedure('round.robin.procedure');
@@ -668,13 +668,13 @@ class ProcedureTest extends \Thruway\Tests\TestCase
 
     public function testInvokeRandomRegistration()
     {
-        $transportCaller = new \Thruway\Transport\DummyTransport();
+        $transportCaller = new \Thruway\Router\Transport\DummyTransport();
         $sessionCaller   = new \Thruway\Session($transportCaller);
         $sessionsToStart = 3;
         $sessions        = array ();
 
         for ($i = 0; $i < $sessionsToStart; $i++) {
-            $sessions[] = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+            $sessions[] = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         }
 
         $proc = new \Thruway\Procedure('random.procedure');
@@ -712,13 +712,13 @@ class ProcedureTest extends \Thruway\Tests\TestCase
 
     public function testInvokeRandomOneRegistration()
     {
-        $transportCaller = new \Thruway\Transport\DummyTransport();
+        $transportCaller = new \Thruway\Router\Transport\DummyTransport();
         $sessionCaller   = new \Thruway\Session($transportCaller);
         $sessionsToStart = 1;
         $sessions        = array ();
 
         for ($i = 0; $i < $sessionsToStart; $i++) {
-            $sessions[] = new \Thruway\Session(new \Thruway\Transport\DummyTransport());
+            $sessions[] = new \Thruway\Session(new \Thruway\Router\Transport\DummyTransport());
         }
 
         $proc = new \Thruway\Procedure('random.procedure');
