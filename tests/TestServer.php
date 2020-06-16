@@ -2,19 +2,30 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
+use Thruway\Router\Transport\InternalClientTransportProvider;
 use Thruway\Router\Transport\RatchetTransportProvider;
 
 //Logger::set(new \Psr\Log\NullLogger());
 
 $timeout = isset($argv[1]) ? $argv[1] : 0;
-$router  = new \Thruway\Router\Router();
-$loop    = $router->getLoop();
+$loop    = \React\EventLoop\Factory::create();
 
 //Create a WebSocket connection that listens on localhost port 8090
 //$router->addTransportProvider(new RatchetTransportProvider("127.0.0.1", 8090));
 
-$router->registerModules([
+////////////////////////
+//WAMP-CRA Authentication
+// setup some users to auth against
+$userDb = new \Thruway\Tests\UserDb();
+$userDb->add('peter', 'secret1', 'salt123');
+$userDb->add('joe', 'secret2', "mmm...salt");
 
+//Add the WAMP-CRA Auth Provider
+$authProvClient = new \Thruway\Authentication\WampCraAuthProvider(["test.wampcra.auth"], $loop);
+$authProvClient->setUserDb($userDb);
+///////////////////////
+
+$modules = [
     // Create Authentication Manager
     new \Thruway\Authentication\AuthenticationManager(),
     // Test stuff for Authorization
@@ -31,33 +42,20 @@ $router->registerModules([
     // Websocket listener
     new RatchetTransportProvider("127.0.0.1", 8090),
     // Rawsocket listener
-    new \Thruway\Router\Transport\RawSocketTransportProvider('127.0.0.1', 28181)
+    new \Thruway\Router\Transport\RawSocketTransportProvider('127.0.0.1', 28181),
 
-]);
+    //Provide authentication for the realm: 'testSimpleAuthRealm'
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\SimpleAuthProviderClient(["testSimpleAuthRealm", "authful_realm"])),
+    // provide aborting auth provider
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloAuthProviderClient(["abortafterhello"])),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloWithDetailsAuthProviderClient(["abortafterhellowithdetails"])),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterAuthenticateWithDetailsAuthProviderClient(["aaawd"])),
 
-//Provide authentication for the realm: 'testSimpleAuthRealm'
-$router->addInternalClient(new \Thruway\Tests\Clients\SimpleAuthProviderClient(["testSimpleAuthRealm", "authful_realm"]));
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\QueryParamAuthProviderClient(["query_param_auth_realm"])),
+    new InternalClientTransportProvider($authProvClient)
+];
 
-
-// provide aborting auth provider
-$router->addInternalClient(new \Thruway\Tests\Clients\AbortAfterHelloAuthProviderClient(["abortafterhello"]));
-$router->addInternalClient(new \Thruway\Tests\Clients\AbortAfterHelloWithDetailsAuthProviderClient(["abortafterhellowithdetails"]));
-$router->addInternalClient(new \Thruway\Tests\Clients\AbortAfterAuthenticateWithDetailsAuthProviderClient(["aaawd"]));
-
-$router->addInternalClient(new \Thruway\Tests\Clients\QueryParamAuthProviderClient(["query_param_auth_realm"]));
-
-////////////////////////
-//WAMP-CRA Authentication
-// setup some users to auth against
-$userDb = new \Thruway\Tests\UserDb();
-$userDb->add('peter', 'secret1', 'salt123');
-$userDb->add('joe', 'secret2', "mmm...salt");
-
-//Add the WAMP-CRA Auth Provider
-$authProvClient = new \Thruway\Authentication\WampCraAuthProvider(["test.wampcra.auth"], $loop);
-$authProvClient->setUserDb($userDb);
-$router->addInternalClient($authProvClient);
-///////////////////////
+$router  = new \Thruway\Router\Router($loop, $modules);
 
 if ($timeout) {
     $loop->addTimer($timeout, function () use ($loop) {

@@ -11,7 +11,6 @@ use Thruway\Event\ConnectionOpenEvent;
 use Thruway\Event\RouterStartEvent;
 use Thruway\Event\RouterStopEvent;
 use Thruway\Logging\Logger;
-use Thruway\Message\Message;
 use Thruway\Module\RouterModuleInterface;
 use Thruway\Peer\ClientInterface;
 use Thruway\RealmManager;
@@ -46,12 +45,7 @@ class Router implements EventSubscriberInterface
     /** @var RouterModuleInterface[] */
     private $modules = [];
 
-    /**
-     * Constructor
-     *
-     * @param \React\EventLoop\LoopInterface $loop
-     */
-    public function __construct(LoopInterface $loop = null)
+    public function __construct(LoopInterface $loop = null, array $modules = [])
     {
         Utils::checkPrecision();
 
@@ -62,6 +56,10 @@ class Router implements EventSubscriberInterface
         $this->eventDispatcher->addSubscriber($this);
 
         $this->registerModule($this->realmManager);
+
+        foreach ($modules as $module) {
+            $this->registerModule($module);
+        }
 
         Logger::debug($this, 'New router created');
     }
@@ -363,17 +361,5 @@ class Router implements EventSubscriberInterface
     public function getEventDispatcher()
     {
         return $this->eventDispatcher;
-    }
-
-    /**
-     * Handle transport received message
-     *
-     * @param \Thruway\Transport\TransportInterface $transport
-     * @param \Thruway\Message\Message $msg
-     * @return void
-     */
-    public function onMessage(TransportInterface $transport, Message $msg)
-    {
-        //not used anymore
     }
 }
