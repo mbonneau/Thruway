@@ -63,4 +63,4 @@ if ($timeout) {
     });
 }
 
-$router->start();
+$loop->run();

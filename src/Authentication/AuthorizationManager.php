@@ -94,16 +94,6 @@ class AuthorizationManager extends RouterModuleClient implements RealmModuleInte
     }
 
     /**
-     * Gets called when the module is initialized in the router
-     *
-     * @inheritdoc
-     */
-    public function initModule(Router $router, LoopInterface $loop)
-    {
-        parent::initModule($router, $loop);
-    }
-
-    /**
      * Check to see if an action is authorized on a specific uri given the
      * context of the session attempting the action
      *

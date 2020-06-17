@@ -96,16 +96,6 @@ class AuthenticationManager extends RouterModuleClient implements RealmModuleInt
     }
 
     /**
-     * Gets called when the module is initialized in the router
-     *
-     * @inheritdoc
-     */
-    public function initModule(Router $router, LoopInterface $loop)
-    {
-        parent::initModule($router, $loop);
-    }
-
-    /**
      * Handles session started
      *
      * @param \Thruway\ClientSession $session

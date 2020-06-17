@@ -62,6 +62,8 @@ class Router implements EventSubscriberInterface
         }
 
         Logger::debug($this, 'New router created');
+
+        $this->eventDispatcher->dispatch('router.start', new RouterStartEvent($this, $this->loop));
     }
 
     /**
@@ -105,29 +107,6 @@ class Router implements EventSubscriberInterface
         $session->setLoop($this->getLoop());
 
         return $session;
-    }
-
-    /**
-     * Start router
-     *
-     * @param bool $runLoop
-     * @throws \Exception
-     */
-    public function start($runLoop = true)
-    {
-        Logger::info($this, 'Starting router');
-        if ($this->loop === null) {
-            throw new \Exception('Loop is null');
-        }
-
-        $this->started = true;
-
-        $this->eventDispatcher->dispatch('router.start', new RouterStartEvent());
-
-        if ($runLoop) {
-            Logger::info($this, 'Starting loop');
-            $this->loop->run();
-        }
     }
 
     /**
@@ -341,7 +320,7 @@ class Router implements EventSubscriberInterface
      */
     public function addTransportProvider(RouterTransportProviderInterface $transportProvider)
     {
-        $this->registerModule($transportProvider);
+
     }
 
     /**

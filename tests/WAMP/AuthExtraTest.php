@@ -2,6 +2,8 @@
 
 namespace Thruway\Tests\WAMP;
 
+use Thruway\Router\Transport\InternalClientTransportProvider;
+
 class TheAuthProvider extends \Thruway\Authentication\AbstractAuthProviderClient {
     /**
      * @return mixed
@@ -44,13 +46,14 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
         $this->_challenged = false;
 
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop);
-
-        $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
         $authClient = new TheAuthProvider(['my_realm'], $loop);
 
-        $router->addInternalClient($authClient);
+        $router = new \Thruway\Router\Router($loop, [
+            new \Thruway\Authentication\AuthenticationManager(),
+            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58088),
+            new InternalClientTransportProvider($authClient)
+        ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);
 
@@ -100,8 +103,6 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58088));
-
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:58088/'));
 
         $loop->addTimer(5, function () use ($loop) {
@@ -112,7 +113,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             $client->start(false);
         });
 
-        $router->start();
+        $loop->run();
 
         $this->assertNull($this->_error, '' . $this->_error);
         $this->assertNull($this->_errorPS, '' . $this->_errorPS);
@@ -139,13 +140,14 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
         $this->_challenged = false;
 
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop);
-
-        $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
         $authClient = new TheAuthProvider(['my_realm'], $loop);
 
-        $router->addInternalClient($authClient);
+        $router = new \Thruway\Router\Router($loop, [
+            new \Thruway\Authentication\AuthenticationManager(),
+            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 8087),
+            new InternalClientTransportProvider($authClient)
+        ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);
 
@@ -201,8 +203,6 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 8087));
-
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:8087/'));
 
         $loop->addTimer(5, function () use ($loop) {
@@ -213,7 +213,7 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
             $client->start(false);
         });
 
-        $router->start();
+        $loop->run();
 
         $this->assertNull($this->_error, '' . $this->_error);
         $this->assertNull($this->_errorPS, '' . $this->_errorPS);

@@ -2,6 +2,8 @@
 
 namespace Thruway\Tests\WAMP;
 
+use Thruway\Router\Transport\InternalClientTransportProvider;
+
 class AutoAuthProvider extends \Thruway\Authentication\AbstractAuthProviderClient
 {
     /**
@@ -32,13 +34,14 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
         $this->_challenged = false;
 
         $loop   = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop);
-
-        $router->registerModule(new \Thruway\Authentication\AuthenticationManager());
 
         $authClient = new AutoAuthProvider(['my_realm'], $loop);
 
-        $router->addInternalClient($authClient);
+        $router = new \Thruway\Router\Router($loop, [
+            new \Thruway\Authentication\AuthenticationManager(),
+            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58089),
+            new InternalClientTransportProvider($authClient)
+        ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);
 
@@ -88,8 +91,6 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
             });
         });
 
-        $router->addTransportProvider(new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58089));
-
         $client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider('ws://127.0.0.1:58089/'));
 
         $loop->addTimer(5, function () use ($loop) {
@@ -100,7 +101,7 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
             $client->start(false);
         });
 
-        $router->start();
+        $loop->run();
 
         $this->assertNull($this->_error, '' . $this->_error);
         $this->assertNull($this->_errorPS, '' . $this->_errorPS);

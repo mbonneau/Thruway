@@ -2,26 +2,24 @@
 
 namespace Thruway\Tests\WAMP;
 
+use Thruway\Router\Transport\InternalClientTransportProvider;
+
 class WampErrorExceptionTest extends \Thruway\Tests\TestCase {
     function testWampErrorException() {
         $loop = \React\EventLoop\Factory::create();
 
-        $router = new \Thruway\Router\Router($loop);
-
-        //$router->addTransportProvider(new \Thruway\Transport\RawSocketTransportProvider());
-
         $client = new \Thruway\Peer\Client("realm1", $loop);
         $client->setAttemptRetry(false);
-        $client->on('open', function (\Thruway\ClientSession $session) use ($router) {
+        $client->on('open', function (\Thruway\ClientSession $session) use ($loop) {
             $session->register('procedure_with_exception', function ($args) {
                 throw new \Thruway\WampErrorException("error.from.exception", $args, (object)[
                     "theKw" => "great"
                 ], (object)[ "more_details" => "some_more_details" ]);
-            })->then(function () use ($session, $router) {
-                $session->call('procedure_with_exception', ['one', 'two'])->then(function ($args) use ($router) {
+            })->then(function () use ($session, $loop) {
+                $session->call('procedure_with_exception', ['one', 'two'])->then(function ($args) use ($loop) {
                     $this->fail('Call with wamp exception should not have succeeded.');
-                    $router->stop();
-                }, function ($err) use ($router) {
+                    $loop->stop();
+                }, function ($err) use ($loop) {
                     /** @var \Thruway\Message\ErrorMessage $err */
                     $this->assertInstanceOf('Thruway\Message\ErrorMessage', $err);
                     $this->assertTrue(is_array($err->getArguments()));
@@ -35,15 +33,16 @@ class WampErrorExceptionTest extends \Thruway\Tests\TestCase {
                     $this->assertEquals('some_more_details', $err->getDetails()->more_details);
                     $this->assertEquals('error.from.exception', $err->getErrorURI());
 
-                    $router->stop();
+                    $loop->stop();
                 });
             });
         });
 
-        //$client->addTransportProvider(new \Thruway\Transport\RawSocketClientTransportProvider());
+        $router = new \Thruway\Router\Router($loop, [
+            new InternalClientTransportProvider($client)
+        ]);
 
-        $router->addInternalClient($client);
-        $router->start();
+        $loop->run();
 
     }
 } 
