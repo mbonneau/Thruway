@@ -2,7 +2,7 @@
 
 namespace Thruway\Router\Transport;
 
-use React\Socket\Connection;
+use React\EventLoop\LoopInterface;
 use React\Socket\ConnectionInterface;
 use React\Socket\Server;
 use Thruway\Event\ConnectionCloseEvent;
@@ -41,16 +41,15 @@ class RawSocketTransportProvider extends AbstractRouterTransportProvider
      */
     private $server;
 
-    /**
-     * Constructor
-     *
-     * @param string $address
-     */
-    public function __construct($address = '127.0.0.1', $port = 8181)
+    /** @var LoopInterface */
+    private $loop;
+
+    public function __construct(LoopInterface $loop, $address = '127.0.0.1', $port = 8181)
     {
         $this->address  = $address;
         $this->port     = $port;
         $this->sessions = new \SplObjectStorage();
+        $this->loop     = $loop;
     }
 
     /**

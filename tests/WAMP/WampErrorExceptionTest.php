@@ -38,7 +38,7 @@ class WampErrorExceptionTest extends \Thruway\Tests\TestCase {
             });
         });
 
-        $router = new \Thruway\Router\Router($loop, [
+        $router = new \Thruway\Router\Router([
             new InternalClientTransportProvider($client)
         ]);
 

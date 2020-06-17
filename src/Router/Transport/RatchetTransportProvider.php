@@ -53,18 +53,16 @@ class RatchetTransportProvider extends AbstractRouterTransportProvider implement
      */
     private $ws;
 
-    /**
-     * Constructor
-     *
-     * @param string $address
-     * @param string|int $port
-     */
-    public function __construct($address = "127.0.0.1", $port = 8080)
+    /** @var LoopInterface */
+    private $loop;
+
+    public function __construct(LoopInterface $loop, $address = "127.0.0.1", $port = 8080)
     {
         $this->port     = $port;
         $this->address  = $address;
         $this->sessions = new \SplObjectStorage();
         $this->ws       = new WsServer($this);
+        $this->loop     = $loop;
     }
 
     /**

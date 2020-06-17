@@ -11,15 +11,12 @@ use Thruway\Event\ConnectionOpenEvent;
 use Thruway\Event\RouterStartEvent;
 use Thruway\Event\RouterStopEvent;
 use Thruway\Logging\Logger;
+use Thruway\Module\RouterModuleClient;
 use Thruway\Module\RouterModuleInterface;
-use Thruway\Peer\ClientInterface;
 use Thruway\RealmManager;
 use Thruway\Session;
 use Thruway\Router\Transport\InternalClientTransportProvider;
-use Thruway\Router\Transport\RouterTransportProviderInterface;
 use Thruway\Router\Transport\TransportInterface;
-use React\EventLoop\Factory;
-use React\EventLoop\LoopInterface;
 
 /**
  * Class Router
@@ -27,17 +24,11 @@ use React\EventLoop\LoopInterface;
  */
 class Router implements EventSubscriberInterface
 {
-    /** @var bool */
-    protected $started = false;
-
     /** @var \Thruway\RealmManager */
     private $realmManager;
 
     /** @var array */
     private $sessions = [];
-
-    /** @var \React\EventLoop\LoopInterface */
-    private $loop;
 
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
@@ -45,11 +36,10 @@ class Router implements EventSubscriberInterface
     /** @var RouterModuleInterface[] */
     private $modules = [];
 
-    public function __construct(LoopInterface $loop = null, array $modules = [])
+    public function __construct(array $modules = [])
     {
         Utils::checkPrecision();
 
-        $this->loop            = $loop ?: Factory::create();
         $this->realmManager    = new RealmManager();
         $this->eventDispatcher = new EventDispatcher();
 
@@ -63,7 +53,7 @@ class Router implements EventSubscriberInterface
 
         Logger::debug($this, 'New router created');
 
-        $this->eventDispatcher->dispatch('router.start', new RouterStartEvent($this, $this->loop));
+        $this->eventDispatcher->dispatch('router.start', new RouterStartEvent($this));
     }
 
     /**
@@ -104,7 +94,6 @@ class Router implements EventSubscriberInterface
     public function createNewSession($transport)
     {
         $session = new Session($transport);
-        $session->setLoop($this->getLoop());
 
         return $session;
     }
@@ -172,16 +161,6 @@ class Router implements EventSubscriberInterface
     public function setAuthorizationManager($authorizationManager)
     {
         throw new \Exception('AuthorizationManager is now a module');
-    }
-
-    /**
-     * Get loop
-     *
-     * @return \React\EventLoop\LoopInterface
-     */
-    public function getLoop()
-    {
-        return $this->loop;
     }
 
     /**
@@ -297,8 +276,12 @@ class Router implements EventSubscriberInterface
      */
     public function registerModule(RouterModuleInterface $module)
     {
-        $module->initModule($this, $this->getLoop());
+        $module->initModule($this);
         $this->eventDispatcher->addSubscriber($module);
+        if ($module instanceof RouterModuleClient) {
+            $m = new InternalClientTransportProvider($module);
+            $this->eventDispatcher->addSubscriber($m);
+        }
     }
 
     /**
@@ -311,27 +294,6 @@ class Router implements EventSubscriberInterface
         foreach ($modules as $module) {
             $this->registerModule($module);
         }
-    }
-
-    /**
-     * Add a transport provider
-     *
-     * @param RouterTransportProviderInterface $transportProvider
-     */
-    public function addTransportProvider(RouterTransportProviderInterface $transportProvider)
-    {
-
-    }
-
-    /**
-     * Add a client that uses the internal transport provider
-     *
-     * @param ClientInterface $client
-     */
-    public function addInternalClient(ClientInterface $client)
-    {
-        $internalTransport = new InternalClientTransportProvider($client);
-        $this->registerModule($internalTransport);
     }
 
     /**

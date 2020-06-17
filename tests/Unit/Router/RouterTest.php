@@ -25,11 +25,6 @@ class RouterTest extends \Thruway\Tests\TestCase
         $this->router = new Router();
     }
 
-    public function testLoopCreated()
-    {
-        $this->assertInstanceOf('\React\EventLoop\LoopInterface', $this->router->getLoop());
-    }
-
     /**
      * Test router start
      * @doesNotPerformAssertions
@@ -39,7 +34,6 @@ class RouterTest extends \Thruway\Tests\TestCase
      */
     public function testStart()
     {
-
         return $this->router;
     }
 
@@ -721,7 +715,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     public function testStateHandlerStuff() {
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
-        $router = new \Thruway\Router\Router(null, [$stateHandlerRegistry]);
+        $router = new \Thruway\Router\Router([$stateHandlerRegistry]);
 
         $transportStateHandler = $this->createTransportMock();
 
@@ -822,7 +816,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     public function testStateRestoreWithQueuePubIdNotInQueue() {
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
-        $router = new \Thruway\Router\Router(null, [$stateHandlerRegistry]);
+        $router = new \Thruway\Router\Router([$stateHandlerRegistry]);
 
         $transportStateHandler = $this->createTransportMock();
 
@@ -924,7 +918,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     public function testStateRestoreWithQueueNullPubId() {
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
-        $router = new \Thruway\Router\Router(null, [$stateHandlerRegistry]);
+        $router = new \Thruway\Router\Router([$stateHandlerRegistry]);
 
         $transportStateHandler = $this->createTransportMock();
 
@@ -1026,7 +1020,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     public function testStateRestoreWithNoQueue() {
         $stateHandlerRegistry = new \Thruway\Subscription\StateHandlerRegistry('state.test.realm');
 
-        $router = new \Thruway\Router\Router(null, [$stateHandlerRegistry]);
+        $router = new \Thruway\Router\Router([$stateHandlerRegistry]);
 
         $transportStateHandler = $this->createTransportMock();
 
@@ -1118,7 +1112,7 @@ class RouterTest extends \Thruway\Tests\TestCase
 
     public function testRouterStop() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop, [new \Thruway\Router\Transport\RatchetTransportProvider("127.0.0.1", 18080)]);
+        $router = new \Thruway\Router\Router([new \Thruway\Router\Transport\RatchetTransportProvider($loop, "127.0.0.1", 18080)]);
         $loop->addTimer(.1, function () use ($router) {
             $router->stop();
             $this->_result = "Stop was called";
@@ -1130,7 +1124,7 @@ class RouterTest extends \Thruway\Tests\TestCase
 
     public function testRouterStopWithLiveSession() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop, [new \Thruway\Router\Transport\RatchetTransportProvider("127.0.0.1", 18080)]);
+        $router = new \Thruway\Router\Router([new \Thruway\Router\Transport\RatchetTransportProvider($loop, "127.0.0.1", 18080)]);
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->on('open', function () use ($loop, $router) {
             $router->stop();
@@ -1147,7 +1141,7 @@ class RouterTest extends \Thruway\Tests\TestCase
     }
     public function testRouterStopWithRawSocketLiveSession() {
         $loop = \React\EventLoop\Factory::create();
-        $router = new \Thruway\Router\Router($loop, [new \Thruway\Router\Transport\RawSocketTransportProvider("127.0.0.1", 18080)]);
+        $router = new \Thruway\Router\Router([new \Thruway\Router\Transport\RawSocketTransportProvider($loop, "127.0.0.1", 18080)]);
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->on('open', function () use ($loop, $router) {
             $router->stop();
@@ -1167,8 +1161,8 @@ class RouterTest extends \Thruway\Tests\TestCase
         // just so we have another transport
         $client = new \Thruway\Peer\Client("some_realm", $loop);
         $client->setAttemptRetry(false); // we are running on the same loop so if we allow retry, we will hang
-        $router = new \Thruway\Router\Router($loop, [
-            new \Thruway\Router\Transport\RawSocketTransportProvider("127.0.0.1", 18080),
+        $router = new \Thruway\Router\Router([
+            new \Thruway\Router\Transport\RawSocketTransportProvider($loop, "127.0.0.1", 18080),
             new InternalClientTransportProvider($client)
         ]);
         $loop->addTimer(0.1, function () use ($client) {
@@ -1190,7 +1184,7 @@ class RouterTest extends \Thruway\Tests\TestCase
         // internal client in this case
         $iClient = new \Thruway\Peer\Client('some_realm');
 
-        $router = new \Thruway\Router\Router($loop, [
+        $router = new \Thruway\Router\Router([
             new \Thruway\Router\Transport\InternalClientTransportProvider($iClient)
         ]);
 

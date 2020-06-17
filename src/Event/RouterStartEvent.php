@@ -10,18 +10,14 @@ class RouterStartEvent extends Event
     /** @var Router */
     private $router;
 
-    /** @var LoopInterface */
-    private $loop;
-
     /**
      * RouterStartEvent constructor.
      * @param Router $router
      * @param LoopInterface $loop
      */
-    public function __construct(Router $router, LoopInterface $loop)
+    public function __construct(Router $router)
     {
         $this->router = $router;
-        $this->loop   = $loop;
     }
 
     /**
@@ -30,13 +26,5 @@ class RouterStartEvent extends Event
     public function getRouter(): Router
     {
         return $this->router;
-    }
-
-    /**
-     * @return LoopInterface
-     */
-    public function getLoop(): LoopInterface
-    {
-        return $this->loop;
     }
 }

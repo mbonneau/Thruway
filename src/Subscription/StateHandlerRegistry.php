@@ -59,9 +59,9 @@ class StateHandlerRegistry extends RouterModuleClient
      *
      * @inheritdoc
      */
-    public function initModule(Router $router, LoopInterface $loop)
+    public function initModule(Router $router)
     {
-        parent::initModule($router, $loop);
+        parent::initModule($router);
 
         $this->routerRealm = $router->getRealmManager()->getRealm($this->getRealm());
         $this->broker      = $this->routerRealm->getBroker();

@@ -37,10 +37,10 @@ class NoChallengeTest extends \Thruway\Tests\TestCase
 
         $authClient = new AutoAuthProvider(['my_realm'], $loop);
 
-        $router = new \Thruway\Router\Router($loop, [
+        $router = new \Thruway\Router\Router([
             new \Thruway\Authentication\AuthenticationManager(),
-            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58089),
-            new InternalClientTransportProvider($authClient)
+            new \Thruway\Router\Transport\RatchetTransportProvider($loop, '127.0.0.1', 58089),
+            new InternalClientTransportProvider($authClient, $loop)
         ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);

@@ -49,10 +49,10 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
 
         $authClient = new TheAuthProvider(['my_realm'], $loop);
 
-        $router = new \Thruway\Router\Router($loop, [
+        $router = new \Thruway\Router\Router([
             new \Thruway\Authentication\AuthenticationManager(),
-            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 58088),
-            new InternalClientTransportProvider($authClient)
+            new \Thruway\Router\Transport\RatchetTransportProvider($loop, '127.0.0.1', 58088),
+            new InternalClientTransportProvider($authClient, $loop)
         ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);
@@ -143,10 +143,10 @@ class AuthExtraTest extends \Thruway\Tests\TestCase {
 
         $authClient = new TheAuthProvider(['my_realm'], $loop);
 
-        $router = new \Thruway\Router\Router($loop, [
+        $router = new \Thruway\Router\Router([
             new \Thruway\Authentication\AuthenticationManager(),
-            new \Thruway\Router\Transport\RatchetTransportProvider('127.0.0.1', 8087),
-            new InternalClientTransportProvider($authClient)
+            new \Thruway\Router\Transport\RatchetTransportProvider($loop, '127.0.0.1', 8087),
+            new InternalClientTransportProvider($authClient, $loop)
         ]);
 
         $client = new \Thruway\Peer\Client('my_realm', $loop);

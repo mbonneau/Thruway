@@ -2,6 +2,7 @@
 
 namespace Thruway\Router\Transport;
 
+use React\EventLoop\LoopInterface;
 use Thruway\Event\ConnectionOpenEvent;
 use Thruway\Event\RouterStartEvent;
 use Thruway\Event\RouterStopEvent;
@@ -26,6 +27,9 @@ class InternalClientTransportProvider extends AbstractRouterTransportProvider
      */
     private $session;
 
+    /** @var LoopInterface */
+    private $loop;
+
     /**
      * Constructor
      *
@@ -44,17 +48,19 @@ class InternalClientTransportProvider extends AbstractRouterTransportProvider
         /** @var Session $session */
         $session = null;
 
+        $this->router = $event->getRouter();
+
         // create a new transport for the client side to use
         $clientTransport = new InternalClientTransport(function ($msg) use (&$session) {
             $session->dispatchMessage(Message::createMessageFromArray(json_decode(json_encode($msg))));
-        }, $this->loop);
+        });
 
 
         // create a new transport for the router side to use
         $transport = new InternalClientTransport(function ($msg) use ($clientTransport) {
             $this->internalClient->onMessage($clientTransport,
                 Message::createMessageFromArray(json_decode(json_encode($msg))));
-        }, $this->loop);
+        });
         $transport->setTrusted($this->trusted);
 
         $session       = $this->router->createNewSession($transport);

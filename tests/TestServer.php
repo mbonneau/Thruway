@@ -29,33 +29,33 @@ $modules = [
     // Create Authentication Manager
     new \Thruway\Authentication\AuthenticationManager(),
     // Test stuff for Authorization
-    new \Thruway\Authentication\AuthorizationManager('authorizing_realm'),
+    new \Thruway\Authentication\AuthorizationManager('authorizing_realm', $loop),
     // Create a realm with Authentication also to test some stuff
-    new \Thruway\Authentication\AuthorizationManager("authful_realm"),
+    new \Thruway\Authentication\AuthorizationManager("authful_realm", $loop),
     // Client for End-to-End testing
-    new \Thruway\Tests\Clients\InternalClient('testRealm'),
+    new \Thruway\Tests\Clients\InternalClient('testRealm', $loop),
     // Client for Disclose Publisher Test
-    new \Thruway\Tests\Clients\DisclosePublisherClient('testSimpleAuthRealm'),
+    new \Thruway\Tests\Clients\DisclosePublisherClient('testSimpleAuthRealm', $loop),
     // State Handler Testing
-    new \Thruway\Subscription\StateHandlerRegistry('state.test.realm'),
+    new \Thruway\Subscription\StateHandlerRegistry('state.test.realm', $loop),
 
     // Websocket listener
-    new RatchetTransportProvider("127.0.0.1", 8090),
+    new RatchetTransportProvider($loop, "127.0.0.1", 8090),
     // Rawsocket listener
-    new \Thruway\Router\Transport\RawSocketTransportProvider('127.0.0.1', 28181),
+    new \Thruway\Router\Transport\RawSocketTransportProvider($loop, '127.0.0.1', 28181),
 
     //Provide authentication for the realm: 'testSimpleAuthRealm'
-    new InternalClientTransportProvider(new \Thruway\Tests\Clients\SimpleAuthProviderClient(["testSimpleAuthRealm", "authful_realm"])),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\SimpleAuthProviderClient(["testSimpleAuthRealm", "authful_realm"], $loop)),
     // provide aborting auth provider
-    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloAuthProviderClient(["abortafterhello"])),
-    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloWithDetailsAuthProviderClient(["abortafterhellowithdetails"])),
-    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterAuthenticateWithDetailsAuthProviderClient(["aaawd"])),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloAuthProviderClient(["abortafterhello"], $loop)),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterHelloWithDetailsAuthProviderClient(["abortafterhellowithdetails"], $loop)),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\AbortAfterAuthenticateWithDetailsAuthProviderClient(["aaawd"], $loop)),
 
-    new InternalClientTransportProvider(new \Thruway\Tests\Clients\QueryParamAuthProviderClient(["query_param_auth_realm"])),
+    new InternalClientTransportProvider(new \Thruway\Tests\Clients\QueryParamAuthProviderClient(["query_param_auth_realm"], $loop)),
     new InternalClientTransportProvider($authProvClient)
 ];
 
-$router  = new \Thruway\Router\Router($loop, $modules);
+$router  = new \Thruway\Router\Router($modules);
 
 if ($timeout) {
     $loop->addTimer($timeout, function () use ($loop) {

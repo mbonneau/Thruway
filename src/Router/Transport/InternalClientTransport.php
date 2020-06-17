@@ -2,7 +2,6 @@
 
 namespace Thruway\Router\Transport;
 
-use React\EventLoop\LoopInterface;
 use Thruway\Message\Message;
 
 /**
@@ -16,12 +15,10 @@ class InternalClientTransport extends \Thruway\Transport\AbstractTransport
      * Constructor
      *
      * @param callable $sendMessage
-     * @param \React\EventLoop\LoopInterface $loop
      */
-    public function __construct(callable $sendMessage, LoopInterface $loop)
+    public function __construct(callable $sendMessage)
     {
         $this->sendMessageFunction = $sendMessage;
-        $this->loop                = $loop;
     }
 
     /**

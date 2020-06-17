@@ -21,12 +21,12 @@ class RouterModuleClient extends Client implements RouterModuleInterface
      * @param Router $router
      * @param LoopInterface $loop
      */
-    public function initModule(Router $router, LoopInterface $loop)
+    public function initModule(Router $router)
     {
         $this->router = $router;
-        $this->setLoop($loop);
 
-        $this->router->addInternalClient($this);
+        // This may be needed
+        //$this->router->addInternalClient($this);
     }
 
     /**
